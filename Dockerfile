@@ -1,9 +1,11 @@
 FROM node:14.5.0-alpine as builder
 
-COPY . .
+RUN mkdir /code
+WORKDIR /code
+
+COPY package*.json ./
 
 RUN npm i
-RUN npm run build
 
 FROM builder as test
 
