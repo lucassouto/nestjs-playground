@@ -9,5 +9,17 @@ services:
     volumes:
       - .:/code
       - ./node_modules:/code/node_modules
+    env_file:
+      - .env
     ports:
       - 3000:3000
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgres
+    hostname: postgres
+    image: postgres
+    env_file:
+      - .env
+    ports:
+      - 5432:5432

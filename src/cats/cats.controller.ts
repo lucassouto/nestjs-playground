@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Cat } from './cats.entity';
 import { CatsService } from './cats.service';
-import { CreateCatDto  } from './dto/create-cat.dto';
-import { Cat } from './interfaces/cat.interface';
 
 @Controller('cats')
 export class CatsController {
@@ -13,14 +12,19 @@ export class CatsController {
     }
 
     @Post()
-    async create(@Body() createCatDto: CreateCatDto): Promise<string> {
-        const cat = this.catsService.create(createCatDto);
-        return `Gatinho ${cat.name} criado com sucesso!`;
+    async create(@Body() catData: Cat): Promise<Cat> {
+        const cat = await this.catsService.create(catData);
+        return cat;
     }
 
     @Get(':name')
-    async findByName(@Param() params): Promise<string> {
-        const cats = this.catsService.findByName(params.name).map(elem => elem.id);
-        return `Esses são os IDs dos gatinhos com nome ${params.name}: ${cats}`;
+    async findByName(@Param() params): Promise<Cat> {
+        const cat = await this.catsService.findByName(params.name);
+        return cat;
+    }
+
+    @Delete(':id')
+    async remove(@Param() params) {
+        this.catsService.remove(params.id);
     }
 }
